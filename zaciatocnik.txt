@@ -1,0 +1,2299 @@
+1.  Uvod
+
+
+     Prirucka     zaciatocnika     je     urcena     ako
+zaciatocnikom   v   oblasti  vypoctovej  techniky  tak  aj
+uzivatelom, ktori doteraz pracovali pod  inym  operacnym
+systemom.  Je  vhodne  pri  studovani tejto prirucky mat
+pristup k  terminalu  a  moznost  vyskusat  si  uvedene
+priklady.
+
+     Hlavne  pre  uplnych  zaciatocnikov   sa   doporucuje
+pripadne nejasnosti konzultovat so systemovym operatorom,
+popripade s kolegom, ktory uz ma skusenosti s pracou  pod
+OS DEMOS. Menom "DEMOS" sa v celej prirucke oznacuje skupina
+operacnych   systemov   spolocnych   pre    rozne    typy
+pocitacov.  Tento  system  sa  pre  pocitace  rady  SMEP
+nazyva "DEMOS" a pre pocitace rady EC "DOSIX". Informacie,
+vztahujuce  sa iba k urcitej verzii systemu budu zvlast
+oznacene.
+
+     Operacny system DEMOS bol navrhnuty hlavne pre  vyvoj
+systemovych   a   aplikacnych  programovych  prostriedkov,
+spracovanie textov, manipulaciu a  modifikaciu  suborov,  na
+efektivnu   pracu   s  perifernymi  zariadeniami.   Z  tohto
+hladiska je praca v spominanom  OS  lahka,  efektivna  (v
+porovnani  s inymi OS) a nie je tazke naucit sa pohotovo
+pracovat so standardnym programovym  vybavenim  OS  DEMOS.
+Ale  kde  zacat?  Tato  prirucka  je praktickym uvodnym
+materialom k OS DEMOS.  V  kratkosti  vysvetluje  pracu   s
+najfrekventovanejsimi  standardnymi prikazmi, zacinajuc
+prihlasenim   sa   do   systemu   a   konciac   napisanim
+jednoduchych programov.
+
+     Referencny popis vsetkych zakladnych komponentov  OS
+je   v  priruckach  "Prirucka  programatora  I  -  III"  a
+"Prirucka systemoveho programatora IV, V, VIII":
+
+   Prirucka programatora     I    - uzivatelske prikazy
+                             II   - systemove volania
+                             III  - kniznicne moduly
+
+   Prirucka syst. program.   IV   - specialne subory
+                             V    - systemove tabulky
+                             VIII - privilegovane prikazy
+                             VI   - zatial nevyuzite
+                             VII  - zatial nevyuzite
+
+     Na tieto referencne popisy su odkazy vo forme: napr. na
+prikaz  _d_a_t_e  z  "Prirucky  programatora  I"  je  odvolanie
+_d_a_t_e(_1).
+
+
+1                                                             1
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+2.  Zakladne pojmy
+
+
+Operacny system sa sklada:
+
+
+   1) z jadra OS, co je program, ktory bezi v pocitaci a
+      umoznuje  nam vyuzivat moznosti pocitaca a jeho
+      pridavnych zariadeni (disky, tlaciarne,  ...).  Jadro
+      je  vlastne  organizator  (dispecer),  ktory  prijima
+      poziadavky uzivatela, vyhodnocuje ich a potom  organ-
+      izuje ich vykonanie.
+
+   2) zo sluzobnych programov, ktore vlastne  tvoria  balik
+      uz   hotovych   a  pripravenych  programov  k  zadaniu
+      prikazov (poziadavok) uzivatela.
+      Napr.  sucastou  tychto  sluzobnych  programov  su
+      prostriedky  pre  tvorbu  programov,  ktore potom mozu
+      rozsirit zakladny balik sluzobnych programov.
+
+Toto  samozrejme  nie  su  vsetky  prostriedky,   ktore   OS
+poskytuje, ale uplne stacia pre potreby tejto prirucky.
+
+     K  tomu,  aby  OS  mohol  pracovat  a  poskytovat   vam
+pozadovane    sluzby,    je   treba   mat   k   dispozicii
+praceschopne  technicke  prostriedky,  t.j.   pocitacovy
+system.
+
+     Samotny  OS,  t.j.  jadro  a  sluzobne   programy,   sa
+rozmiestni  na disku.  Kazdy program je na disku ulozeny v
+subore. Okrem programov su  v  suboroch  ulozene  aj  ine
+informacie.   Organizacia   suborov   na  disku  sa  nazyva
+suborovy system. Z  hladiska  uzivatela  ma  suborovy
+system  nasledovnu strukturu: suhrn suborov je zhrnuty v
+katalogu. Katalog obsahuje subory  a  moze  obsahovat  aj
+dalsie katalogy.
+
+Graficky si to znazornime:
+Katalog "adam" obsahuje subory "s1", "s2", "s3"  a  katalogy
+"prac" a "text". Katalog "prac" je prazdny (neobsahuje ziad-
+ny subor  ani  katalog),  katalog  "text"  obsahuje  subory
+"sprava1" a "sprava2".  Teda:
+
+              adam
+           /    |   \     \   \
+        prac  text  s1   s2   s3
+             /   \
+        sprava1   sprava2
+
+     Odborne sa takyto graf nazyva  strom.  Z  tohto  dovodu
+(odhliadnuc  od  moznosti  vytvarat  linky  k suborovm) sa
+hovori, ze dany suborovy system ma stromovu  (alebo  aj
+hierarchicku) strukturu.
+Katalog, ktory stoji v celom suborovom systeme najvyssie
+
+
+2                                                             2
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+sa nazyva hlavny katalog (niekedy sa tiez nazyva "root") a
+oznacuje sa znakom "/".
+
+
+
+3.  Terminal a riadiace symboly
+
+
+     Komunikacnym  zariadenim  medzi  vami  a  OS  DEMOS  je
+terminal,  obsahujuci klavesnicu a zobrazovaciu jednotku. OS
+DEMOS je schopny spolupracovat s roznymi terminalmi, ktore
+sa  principialne  delia  na:  terminaly  pisuce na papier a
+obrazovkove terminaly (displeje). Klavesnica terminalu  ob-
+sahuje  zakladne  znaky  (ako  na  pisacom  stroji) a naviac
+specialne (funkcne) znaky. Funkcne klavesy su:
+
+CR, LF - ukoncuje vstupny riadok a posuva  kurzor  na  prvu
+         poziciu nasledujuceho riadku.
+
+CTRL   - sucasne stlacenie  klavesy  CTRL  a  pismenkovej
+         klavesy  vytvara  riadiaci  symbol  (dalej  sa bude
+         uvadzat ako napr. "^c").
+
+DEL    - zrusi posledny napisany znak v riadku.
+
+TAB    -  posuva  kurzor  na  dalsiu  poziciu   tabelatora
+         (pozicia  tabelatora  je  kazda  osma  pozicia v
+         riadku).
+
+     Riadiace  symboly  vytvarane  sucasnym    stlacenim
+vhodnej  pismenkovej klavesy a klavesy <CTRL> su (vzhladom
+k inym typom terminalov v systeme  DOSIX  nie  su  nizsie
+uvedene  cinnosti  realizovane  riadiacimi  klavesami,  ale
+riadiacimi prikazmi):
+
+ ^c -  zrus  proces  (pouziva  sa  na  zastavenie   programu
+      vykonavaneho z vasho terminalu).
+
+ ^d - EOF - oznamuje koniec suboru (odhlasuje terminal).
+
+ ^s - zastav vypis na terminal.
+
+ ^q - po zastaveni vypisu na terminal pokracuj vo vypise.
+
+ ^r - vypis vstupny riadok na novy riadok.
+
+ ^w - vymaz posledne zapisane slovo vo vstupnom riadku.
+
+ ^u - vymaz vstupny riadok.
+
+     V dalsom texte skratka OP znamena operacnu pamat  a
+slovo  "buffer"  vyrovnavaciu pamat.  Zapisy "^znak", "kon-
+trol - znak", "CTRL znak" su ekvivalentne.
+
+
+
+3                                                             3
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+4.  Prihlasenie sa do systemu a shell
+
+
+     Po zavedeni  systemu  do  OP  pocitaca  a  nastaveni
+istych   vstupnych   informacii   (starost   systemoveho
+programatora) sa na vas terminal vypise:
+
+      login:
+
+Teraz system ocakava, ze napisete svoje meno (musi  byt
+vopred   implementovane   systemovym  operatorom)  a  potom
+stlacite  funkcnu  klavesu   <CR>.   Ak   bolo   s   menom
+implementovane  systemovym  programatorom  i  heslo,  potom
+system vypise:
+
+      heslo:
+
+a caka, ze napisete spravne heslo.  Ak  sa  prihlasovaci
+proces  podaril,  potom  sa  na terminal vypise znak, ktory
+bude vasim ohlasovacim  znakom,  napr.  "$".  Tento  znak  je
+ohlasovaci retazec urceny neprivilegovanemu uzivatelovi
+a  indikuje,  ze  system  ocakava  lubovolny   (systemu
+znamy)  prikaz.  Vykonavanie vstupnych riadkov zabezpecuje
+program _s_h_e_l_l (je to standardny program OS DEMOS), ktory  sa
+automaticky    vyvola    prihlasovacim    procesom    a    je
+sprostredkovatelom vasich prikazov, az po odhlasenie sa z
+terminalu  riadiacim  symbolom  <^d>.  Napriklad,  ak  chcete
+vediet datum a cas, pricom shell uz  vypisal  ohlasovaci
+retazec "$", potom napiste:
+
+      date
+
+a  nezabudnite  stlacit  funkcnu  klavesu   <CR>,   ktora
+ukoncuje vstupny riadok.
+
+Vseobecny postup komunikacie uzivatela so systemom je:
+
+   a) shell vypise na terminal ohlasovaci  retazec  (napr.
+      "$"),  cim  indikuje,  ze  je  pripraveny akceptovat
+      vstupny riadok.
+
+   b) uzivatel  napise  vstupny  riadok  (t.j.  sekvenciu
+      jedneho alebo viac prikazov oddelenych bodkociarkou a
+      ukoncenu znakom <CR>).
+
+  c)  shell  spusti  prikaz  a  caka  na  jeho   ukoncenie
+     (necaka,   ak   prikaz  bezi  na  pozadi,  vtedy  sa
+     pokracuje bodom _a).
+
+  d) po vykonani prikazu sa pokracuje bodom _a).
+
+     Z uvedeneho vyplyva, ze na to,  aby  mohol  uzivatel
+komunikovat so systemom, musi poznat:
+
+
+
+4                                                             4
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+    - programy, ktore pouziva.
+
+    - program shell.
+
+    - strukturu suboroveho systemu (t.j. ako su katalogy
+      a subory organizovane v suborovom systeme).
+
+
+
+5.  Katalogy a subory
+
+
+     Ked sa uzivatel korektne prihlasi do  systemu,  dos-
+tane  sa do svojho prihlasovacieho katalogu. Katalog je taky
+subor, ktory obsahuje  mena inych suborov (mozu to  byt
+znovu  katalogy).  Ak chcete poznat mena suborov, ktore sa
+nachadzaju vo vasom katalogu, napiste prikaz:
+
+      ls
+
+Z vystupu prikazu _l_s este nevieme, ci je subor:
+
+    - textovy subor (bezne vytvoreny programom _e_d).
+
+    - katalog (vytvara sa programom _m_k_d_i_r).
+
+    - specialny subor (vytvara sa programom _m_k_n_o_d).
+
+    - vykonatelny program, ktory je vysledkom kompilacie.
+
+    - prikazovy subor pre shell, atd.
+
+Tieto informacie poskytuje prikaz:
+
+      file *
+
+v ktorom argument "*" je  specialny  znak,  za  ktory  shell
+dosadi  mena  vsetkych  suborov, ktore sa nachadzaju vo
+vasom pracovnom katalogu.
+
+Poznamka:
+Kazdy uzivatel  systemu  ma  katalog,  do  ktoreho  sa
+prihlasuje.   Tento katalog sa nazyva prihlasovaci katalog.
+Po prihlaseni sa do systemu uzivatel  moze  prejst  do
+ineho  katalogu  prikazom  _c_d.  Zmeneny katalog uz nie je
+prihlasovacim  katalogom,  ale  pracovnym   katalogom.   Po
+prihlaseni  sa  do  systemu  je  pracovnym katalogom vzdy
+prihlasovaci katalog.
+
+
+
+
+
+
+
+
+5                                                             5
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+6.  Vytvorenie textoveho suboru
+
+
+     Vas  prihlasovaci  katalog  je  vhodne  "miesto"   na
+vytvaranie  roznych  suborov.   V  tejto  casti  sa  budeme
+zaoberat vytvaranim textovych suborov prikazom _e_d (editor
+OS  DEMOS). Napr. pokusme sa vytvorit textovy subor "text",
+ktory obsahuje tieto dva riadky:
+
+      DEMOS je lahky OS
+      a preto sa ho naucim rychlo pouzivat.
+
+Prikazom  _e_d  sa  vyvola  textovy  editor  v  interaktivnom
+rezime.  S  tymto  programom  sa  komunikuje pomocou urcitej
+mnoziny prikazov, z ktorych my na napisanie  horeuvedenych
+dvoch riadkov budeme potrebovat tieto:
+
+a       - do buffra pridaj text az  po  bodku,  ktora  stoji
+          samostatne  na  zaciatku riadku a ukoncuje pridanie
+          textu.
+
+w subor - zapis text z buffra do specifikovaneho  suboru,
+          ktory editor vytvori vo vasom pracovnom katalogu;
+          na terminal sa vypise pocet zapisanych znakov.
+
+q - ukonci pracu v programe _e_d a vrat sa do shellu.
+
+     Sekvencia  prikazov,  pomocou  ktorej  vytvorime  subor
+"text" v pracovnom katalogu, bude:
+
+      ed
+      a
+      DEMOS je lahky OS
+      a preto sa ho naucim rychlo pouzivat.
+      .
+      w text
+      q
+
+Za prikazmi nezabudnite davat znak noveho riadku <CR>.
+
+     Prikazom  _l_s  s  argumentami  "-l"  a  "text"  (argumenty
+lubovolneho  programu  musia  byt  oddelene medzerou alebo
+tabelatorom):
+
+      ls -l text
+
+zistime, ci sa subor "text" nachadza v pracovnom katalogu,
+kedy  bol  vytvoreny,  kolko  ma bajtov, komu patri, ci sa
+moze citat vlastnikom (prve _r zlava), skupinou  (druhe
+_r  zlava),  ostatnymi  (tretie _r zlava) a kto moze do neho
+zapisovat (prve _w zlava vlastnik, atd.), t.j. na terminal
+sa vypise:
+
+      -rw-rw-rw- juro 55 Jul 22 2:56 text
+
+
+6                                                             6
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+Obsah suboru  "text"  sa  da  na  terminal  vypisat  napr.
+prikazom:
+
+      cat text
+
+ktory  vypisuje  specifikovany  subor  od  zaciatku  alebo
+prikazom  _t_a_i_l,  ktory  vypisuje  poslednych  desat riadkov
+suboru, napr.:
+
+      tail text
+
+     Takymto postupom mozeme vytvorit napr. zdrojovy  text
+pre   prekladac   C-jazyka   _c_c,   prekladac   asembleru  _a_s;
+prikazovy subor pre _s_h (shell), prikazovy subor  pre  _e_d,
+atd.
+
+Poznamka:
+Vlastnik  suboru  je   platny   uzivatel   systemu.   Po
+vytvoreni   suboru  editorom  alebo  shellom  sa  automaticky
+vlastnikom suboru stava ten uzivatel, pod menom  ktoreho
+bol terminal prihlaseny.
+
+
+
+7.  Manipulacia so subormi
+
+
+Subor "text" mozeme napr. premenovat na subor "novy":
+
+      mv text novy
+
+cim sa odstrani z katalogu subor "text" a vytvori  subor
+"novy"  s  tym  istym  obsahom.  Ak  chceme  vytvorit kopiu
+suboru "novy", ktora bude mat meno "juro", napiseme:
+
+      cp novy juro; ls -l novy juro
+
+kde bodkociarka oddeluje v riadku prikazy _c_p a _l_s.  Ci  su
+subory "novy" a "juro" rovnake, zistime prikazom:
+
+      cmp novy juro
+
+ktory nevypise  nic,  ak  su  rovnake.  Kedze  mame  v
+katalogu   dva   rovnake   subory,  jeden  z  nich  mozeme
+odstranit prikazom _r_m:
+
+      rm juro; ls
+
+Prikazom  _l_s  zistime,  ci  bol  subor   "juro"   skutocne
+odstraneny.
+
+     Pretoze  sme  subor  "text"  editovali,   vypisali   na
+terminal  prikazom  _c_a_t  a  potom premenovali prikazom _m_v na
+
+
+7                                                             7
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+"novy", vieme, ze  subor  "novy"  obsahuje  dva  riadky.   Na
+zistenie  poctu riadkov, slov a znakov lubovolneho suboru,
+sa pouziva prikaz _w_c, napr.:
+
+      wc -l novy
+
+vypise pocet riadkov suboru "novy" a prikaz:
+
+      wc -w novy
+
+vypise pocet slov suboru "novy" a prikaz:
+
+      wc -c novy
+
+vypise pocet znakov suboru "novy".
+
+     Vypis suboru nemusi  smerovat  na  terminal,  ale  do
+nejakeho ineho suboru, napr.:
+
+      cat novy >pero2
+
+     Argumentom prikazu _c_a_t je len subor "novy".  Postupnost
+znakov  ">pero2" indikuje shellu, ze ma v pracovnom katalogu
+vytvorit prazdny  subor  _p_e_r_o_2  a  vystup  z  prikazu  _c_a_t
+presmerovat do neho namiesto na terminal. V tomto pripade je
+uvedeny zapis ekvivalentny s prikazom:
+
+      cp novy pero2
+
+Prikaz _c_a_t sa okrem vypisu  obsahu  suboru  pouziva  i  na
+zretazenie suborov, napr.:
+
+      cat novy pero2 >iny
+
+Obvykle by prikaz _c_a_t vypisal na  terminal  najskor  subor
+"novy"  a  za  nim "pero2", lenze vystup je presmerovany do
+suboru "iny".
+
+     Podobne je mozne presmerovat vystup z inych prikazov
+do suboru, napr.:
+
+      ls /bin >prikazy
+
+     V katalogu "/bin" sa nachadza zoznam  prikazov,  ktore
+moze shell vykonat, ak ich spravne napisete na terminal.
+Kedze vystup z prikazu _l_s nesmeroval na terminal,  ale  do
+suboru  "prikazy", ktory sa vytvoril vo vasom katalogu, po-
+tom programom _w_c, napr.:
+
+      wc -l prikazy
+
+mozeme zistit,  kolko  standardnych  prikazov  OS  DEMOS
+mame k dispozicii.
+
+
+
+8                                                             8
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+Poznamka:
+Ak presmerujete vystup lubovolneho prikazu znakom  ">"  do
+existujuceho  suboru,  potom sa najskor jeho povodny obsah
+vymaze.
+
+
+
+8.  Komunikacne prikazy
+
+
+     OS  DEMOS  je  mnohouzivatelsky  OS  s  pridelovanim
+casu,   takze   umoznuje  sucasne  pracovat  niekolkym
+uzivatelom. Prikaz  _w_h_o  vypise  mena  prihlasenych  i
+cislo terminalu, na ktorom sa prihlasili, napr.:
+
+      who; tty
+
+kde prikaz _t_t_y vypise meno  vasho  terminalu.  Z  vasho
+terminalu   mozete  poslat  spravu  inemu  uzivatelovi
+prikazom _w_r_i_t_e, napr.:
+
+      JUROV TERMINAL              BETTIN TERMINAL
+      write betty                 Sprava od: juro (tty1) o 09.30
+      Precitaj si postu.          Precitaj si postu.
+      ^d                          Koniec
+
+     Prikaz _w_r_i_t_e posle na terminal, na ktorom sa prihlasil
+uzivatel   _b_e_t_t_y   spravu,  aby  si  napriklad  precital
+elektronicku postu.  _W_r_i_t_e posiela spravy po riadkoch. Ak sa
+na zaciatku riadku nachadza znak "!" (vykricnik) a za nim
+lubovolny prikaz (aj  vas  vlastny),  tento  prikaz  sa
+vykona a po jeho vykonani _w_r_i_t_e znovu caka na vstupny ria-
+dok.   Riadok  oznaceny  vykricnikom  sa  nepovazuje   za
+vysielanu spravu.
+
+     Uzivatel,   ktory   dostal   spravu   z   niektoreho
+terminalu moze tiez odpovedat prikazom _w_r_i_t_e, pretoze sa
+pred spravou vypise:
+
+      Sprava od: juro (tty1) o 09.30
+
+cim   sa   urci   uzivatel,   ktory   poslal   spravu.
+Uzivatelia  si  mozu  posielat  spravy  az dovtedy, kym
+neukoncia vstup riadiacim symbolom "^d".
+
+     Ak si niektory z uzivatelov nepraje, aby  sa  na  jeho
+terminal posielali spravy prikazom _w_r_i_t_e, napise prikaz:
+
+      mesg n
+
+Povolenie  prijimania  sprav  sa  po   zakazani   nastavuje
+prikazom:
+
+      mesg y
+
+
+9                                                             9
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+     Uzivatelia OS DEMOS si mozu prikazom _m_a_i_l posielat i
+elektronicku postu, napr.:
+
+      mail betty
+      Ahoj, Betty
+      Ked sa prihlasis,
+      postav na kavu
+      a posli spravu.
+      <^d>
+
+Ked sa uzivatel prihlasi do systemu a ma postu, system
+ho na nu upozorni vypisom:
+
+      Mas postu.
+
+Ak chce uzivatel citat postu, napise:
+
+      mail
+
+a na terminal sa vypise zoznam obdrzanej posty. Po vypise
+_m_a_i_l  caka  na reakciu uzivatela. Ak odpoviete otaznikom,
+_m_a_i_l  vypise  zoznam  svojich  prikazov  i  s  prislusnym
+vyznamom.  Zadanim  cisla  urcime,  ktoru spravu chceme
+precitat.
+
+     Uzivatelia OS DEMOS sa rozdeluju na privilegovanych a
+neprivilegovanych.  Rozdiel je napr. v tom, ze privilegovany
+uzivatel moze pouzivat vsetky standardne prikazy.
+
+
+
+9.  Katalogy OS DEMOS
+
+
+     Subory  OS  DEMOS  su  zoskupovane  v   katalogoch   a
+katalogy  su  organizovane v stromovej hierarchii.  Vrcholom
+spominanej   hierarchie   je   specialny   katalog   "root"
+(oznacuje  sa "/"), ktory obsahuje standardne katalogy ako
+"/bin", "/usr", "/dev", "/etc", "/lib"  a  systemove  subory
+(zavadzaciu    proceduru,    obraz   jadra   -   exekutivu).
+Nasledujuci   obrazok   ukazuje    stromovu    architekturu
+suboroveho systemu "root":
+
+                     root
+       /      /       |       \       \       \
+      bin     etc    usr      dev     tmp     mnt
+                  /   |   \
+               juro betty vlado
+
+Katalogy  "/bin",  "/etc",  "/usr"  atd.,  su   podkatalogy
+katalogu  "root".  V  tychto katalogoch je mozne prikazom
+_m_k_d_i_r vytvarat dalsie katalogy (do  lubovolnej  hlbky),
+ktore   sa   stanu  podkatalogmi  katalogu,  v  ktorom  su
+
+
+10                                                           10
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+vytvorene. Katalog, v ktorom sa vytvaraju  ine  katalogy,
+sa nazyva pre tieto katalogy rodicovsky katalog (pre shell
+sa specifikuje retazcom ".."). Katalog, v ktorom uzivatel
+pracuje,  je  podkatalogom rodicovskeho katalogu (pre shell
+sa specifikuje znakom "."). Vsimnite si, ze katalog  "root"
+nema rodicovsky katalog.
+
+     Ked sa uzivatel prihlasi do systemu pod menom _v_l_a_d_o,
+dostane  sa  do  katalogu "vlado" (ak systemovy programator
+priradil uzivatelovi  katalog  s  rovnakym  menom).  Obsah
+svojho katalogu moze vypisat i prikazom _d_u, napr.:
+
+      du -a
+
+ktory rekurzivne vypise kazdy  subor  v  katalogu  i  s
+velkostou  v blokoch. Na zmenu katalogu sa pouziva prikaz
+_c_d, pomocou ktoreho sa mozete dostat do  ineho  katalogu;
+napr.  do rodicovskeho katalogu prikazom:
+
+      cd ..
+
+alebo do katalogu "root" prikazom:
+
+      cd /
+
+znak "/" vyhodnocuje shell ako katalog "root". Obsah katalogu
+"root" mozeme teraz vypisat prikazom:
+
+      ls -s
+
+ktory vypise kazdy subor aj s poctom blokov. Z katalogu
+"root" mozete zostupit do katalogu "/usr" prikazom:
+
+      cd usr
+
+a z neho do "/usr/vlado" prikazom:
+
+      cd vlado
+
+     Z katalogu "root" sa  da  dostat  priamo  do  katalogu
+"vlado" prikazom:
+
+      cd /usr/vlado
+
+Z lubovolneho katalogu sa do katalogu "vlado"  (vseobecne
+do  katalogu,  do  ktoreho  sa  uzivatel  prihlasil  - do
+prihlasovacieho katalogu) dostanete prikazom:
+
+      cd
+
+bez specifikovania argumentov.
+
+     Z katalogu "vlado" sa do katalogu "juro" (vsimnite  si,
+ze tieto katalogy su na jednej urovni) dostanete prikazom:
+
+
+11                                                           11
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      cd ../juro
+
+Retazec ".." specifikuje rodicovsky katalog "/usr" a  znak
+"/"  zasa,  ze  katalog  "juro"  je  podkatalogom  katalogu
+"/usr". V svojom katalogu "vlado" si mozete vytvorit  napr.
+katalog "konar" prikazom:
+
+      mkdir konar
+
+a dostanete sa do neho prikazom:
+
+      cd konar
+
+Dalej mozete vytvorit prazdny subor "prazdny" prikazom:
+
+      >prazdny
+
+zrusit tento subor prikazom:
+
+      rm prazdny
+
+a ist do rodicovskeho katalogu "vlado" prikazom:
+
+      cd ..
+
+a odstranit prazdny katalog "konar" prikazom:
+
+      rmdir konar
+
+Ak neviete, v ktorom katalogu sa prave  nachadzate,  zadajte
+prikaz:
+
+      pwd
+
+a tento vam vypise celu cestu, t.j. od katalogu "root"  po
+vas pracovny katalog, napriklad:
+
+      /usr/vlado
+
+ak pracujete v katalogu "vlado".
+
+
+
+10.  Suborovy system a specialne subory
+
+
+     Suborovy  system  je  kolekcia  suborov  a  riadiacich
+struktur   suborov   ulozenych   na   pamatovom   mediu
+(najcastejsie  disk).  Suborovy   system   OS   DEMOS   je
+hierarchicky.  Zakladom  suboroveho  systemu  OS  DEMOS je
+katalog  "root", ktory je ulozeny na systemovom disku.  Po
+zavedeni  jadra OS zo systemoveho disku do OP pocitaca sa
+po vykonani prihlasovacieho procesu zavedie  _s_h_e_l_l  (nachadza
+sa  v  katalogu  "/bin"  pod  menom  _s_h na systemovom disku),
+
+
+12                                                           12
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+ktory  cita  a  spracuva  vstupne  riadky   zadavane   z
+terminalu nasledovne:
+
+   a) Predpoklada, ze prve  slovo,  ktore  sa  nachadza  v
+      riadku, je meno prikazu.
+
+   b) Zistuje, ci sa takyto prikaz nachadza medzi subormi
+      v pracovnom katalogu a ak nie, potom hlada v katalogu
+      "/bin".  Ak prikaz najde, zavedie ho do OP  pocitaca
+      a  sprostredkuje mu argumenty (ostatne slova v riadku).
+      V pamati  pocitaca  sa  potom  prikaz  vykona.   Ak
+      prikaz    nenajde,   napise   prislusne   chybove
+      hlasenie.
+
+     Iny suborovy system je  mozne  logicky  pripojit  k
+suborovemu  systemu prikazom /_e_t_c/_m_o_u_n_t pod menom nejakeho
+prazdneho katalogu, nachadzajuceho  sa  napr.  v  katalogu
+"root"  na systemovom disku. Takto sa stane suborovy system
+ulozeny  na  inom  disku  logicky  znamy   pre   system   a
+uzivatel  moze  v  nom  pracovat.  Napr. nech sa system
+zavadza do pamati z  kazetoveho  disku  "rk1"  a  my  chceme
+pracovat aj so suborovym systemom ulozenym na disku "rk0"
+pod katalogom "/mnt", potom prikaz:
+
+      /etc/mount /dev/rk0 /mnt
+
+logicky pripoji tento disk. Prikaz _m_o_u_n_t  moze  pouzivat
+iba privilegovany uzivatel.
+
+     Jednou  zo  zvlastnych  crt  OS  DEMOS   je   spojenie
+vsetkych  vstupno/vystupnych  zariadeni  so  specialnymi
+subormi.  Specialne subory  zariadeni  sa  nachadzaju  v
+katalogu  "/dev".  Pre  kazde  vstupno/vystupne zariadenie
+(disk, tlaciaren, terminal, paska ...) je vytvoreny aspon
+jeden     specialny    subor.    Program    pracujuci    so
+vstupno/vystupnym   zariadenim   sa   obracia   prave    na
+zodpovedajuci specialny subor. Mena specialnych suborov
+su:
+
+kazetovy disk 2,5 MB           rk0, rk1 ...
+magneticka paska              mt0, mt1 ...
+velkokapacitny disk           rp0, rp1, up0, up1 ...
+tlaciaren                     lp0, lp1 ...
+terminal                       tty1, tty2, tty01, tty02 ...
+...
+
+     Napriklad, ak chceme vediet mena vsetkych suborov  a
+katalogov suboroveho systemu "root", ktory je ulozeny na
+disku "rk1", napiseme:
+
+      ncheck /dev/rk1
+
+alebo suboroveho systemu "/mnt" ulozeneho na disku  "rk0",
+napiseme:
+
+
+13                                                           13
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      ncheck /dev/rk0
+
+     Prikazom _d_f  mozeme  zistit  pocet  volnych  blokov
+suborovych systemov "root" a "mnt" zapisom:
+
+      df /dev/rk0; df /dev/rk1
+
+co je ekvivalentne so zapisom:
+
+      df /dev/rk[01]
+
+Zatvorky "[", "]" tu  maju  specialny  vyznam  pre  _s_h_e_l_l,
+ktory ich interpretuje.
+
+
+
+11.  Prikazovy kanal
+
+
+     Prikazovy  kanal  je   spojenie   medzi   standardnym
+vystupom  jedneho  programu  a standardnym vstupom druheho
+programu.  Standardny  vystup   je   subor,   do   ktoreho
+vacsina  programov  umiestnuje  svoj  vystup. Standardny
+vstup je subor, z ktoreho vacsina  programov  cita  svoj
+vstup.   Subory  - standardny vystup a standardny vstup -
+su  po  prihlaseni  automaticky  pripojene   k   terminalu
+uzivatela,    t.j.   _s_h_e_l_l   cita   vstupne   riadky   zo
+standardneho vstupu a zapisuje na standardny  vystup.  Po-
+dobne  i vacsina programov, ktore _s_h_e_l_l aktualizuje, cita
+svoj vstup zo standardneho vstupu a zapisuje na  standardny
+vystup. Program:
+
+      ncheck /dev/rk1
+
+zapisuje svoj vystup (zoznam vsetkych suborov  suboroveho
+systemu  ulozeneho na kazetovom disku "rk1") na standardny
+vystup, t.j.  na terminal. Vystup z prikazu _n_c_h_e_c_k mozeme
+presmerovat do suboru "vsetko", napr.:
+
+      ncheck /dev/rk1 >vsetko
+
+Prvy stlpec tohto suboru obsahuje tzv. ?c?i_s_l_a (vid  "'Uvod
+do systemu"), ktore su priradene kazdemu suboru.  Riadky
+suboru  "vsetko"  nie  su  usporiadane  podla  ciselnych
+hodnot, co sa da zariadit prikazom:
+
+      sort +n vsetko >vsetkousporiadane
+
+a subor "vsetkousporiadane" vytlacit prikazom  _p_r  v  dvoch
+stlpcoch   presmerovanim   vystupu   na   tlaciaren,  t.j.
+prikazom:
+
+      pr -2 vsetkousporiadane >/dev/lp0
+
+
+
+14                                                           14
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+(meno suboru moze mat maximalne 14 znakov,  ak  ma  viac,
+potom  su  nevyznamne).   Po  vytlaceni  zoznamu suborov,
+subory "vsetkousporiadane" a "vsetko" odstranime prikazom:
+
+      rm vsetko*
+
+ktory  najskor  odstrani  subor  "vsetko"  (znak   "*"   je
+interpretovany  shell-om). a potom kazdy iny subor, ktory
+zacina  retazcom  "vsetko"  (znak  "*"  je   interpretovany
+shell-om).
+
+     Vsimnite si, ze na to, aby sme spracovali  a  vytlacili
+vystup  z  prikazu _n_c_h_e_c_k, bolo potrebne vytvorit docasne
+subory "vsetko" a  "vsetkousporiadane",  ktore  sme  nakoniec
+odstranili.   OS   DEMOS   poskytuje   mechanizmus  nazyvany
+_p_r?i_k_a_z_o_v?y _k_a_n?a_l,  ktory  dovoluje  vykonat   horeuvedenu
+postupnost  prikazov  s  rovnakym  ucinkom  bez vytvorenia
+docasnych suborov, takto:
+
+      ncheck /dev/rk1 | sort +n | pr -2 >/dev/lp0
+
+Vystup z prikazu  _n_c_h_e_c_k  je  presmerovany  cez  prikazovy
+kanal (oznacuje sa znakom "|") na vstup prikazu _s_o_r_t, ktory
+usporiada  riadky  podla  ciselnych  hodnot.  Usporiadany
+vystup  z prikazu _s_o_r_t je presmerovany na vstup prikazu _p_r,
+ktory vypisuje riadky v dvoch stlpcoch. Vystup z prikazu _p_r
+je presmerovany na tlaciaren.
+
+Iny priklad prikazoveho kanalu je:
+
+      ls /bin | wc -l
+
+kde _l_s vypisuje zoznam prikazov  katalogu  "/bin"  a  _w_c  ich
+spocitava (vid kapitolu "Manipulacia so subormi").
+
+
+
+12.  Procesy na pozadi
+
+
+     Proces  je  program,  ktory  sa  prave   vykonava.   Po
+zavedeni  jadra  OS  do OP pocitaca jadro udrzuje tabulku
+prave  beziacich  procesov.   Z  tohto   hladiska   mozeme
+povedat,  ze  proces  je polozka v systemovej tabulke pro-
+cesov.   Kazdemu   prave   beziacemu   procesu   exekutiva
+priraduje  identifikacne  cislo  (identifikacne  cisla
+procesov su vzdy rozne).  Uzivatelske  procesy  vytvara
+_s_h_e_l_l   interpretaciou   vasho   prikazoveho   riadku.  Po
+akceptovani vstupneho riadku moze  _s_h_e_l_l  bud  cakat  na
+ukoncenie  prikazu,  alebo  necakat  a  prijimat dalsi
+vstupny riadok. Ak  _s_h_e_l_l  necaka  na  ukoncenie  prikazu,
+hovorime,  ze  sa  prikaz  (proces)  vykonava  na  pozadi.
+Napriklad prikazovy riadok:
+
+
+
+15                                                           15
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      ncheck /dev/rk1 >vsetko &
+
+sa vykona na pozadi. Znak "&" (ma  specialny  vyznam  pre
+_s_h_e_l_l),   signalizuje   _s_h_e_l_l_u,  ze  ma  spracovat  vstupny
+prikazovy riadok a vytvorit pre neho proces na  pozadi.  Po
+akceptovani    vstupneho   riadku   vypise   na   terminal
+identifikacne  cislo  procesu,  pod   ktorym   sa   _n_c_h_e_c_k
+vykonava. Prikazom:
+
+      ps au
+
+mozeme zistit mena vsetkych  uzivatelskych  procesov,
+ktore    sa    prave    vykonavaju   (posledny   stlpec),
+identifikacne cisla tychto procesov i meno  terminalu,  z
+ktoreho  boli spustene.  Aktivne procesy sa rusia prikazom
+_k_i_l_l, napr. ak _s_h_e_l_l vypisal identifikacne  cislo  procesu
+_n_c_h_e_c_k:
+
+      80
+
+potom prikaz:
+
+      kill 80
+
+zrusi tento proces. Ak chce uzivatel zrusit vsetky pro-
+cesy vykonavane na pozadi z jeho terminalu, napise:
+
+      kill 0
+
+cim  sa  odstrania  zodpovedajuce  polozky  v  systemovej
+tabulke procesov.
+
+
+
+13.  Vytvorenie programu v C-jazyku
+
+
+     Mame  napisat  v  C-jazyku  program  "zisti.c",  ktory
+cita  jeden  znak z terminalu a vytlaci retazec "ano", ak
+je vstupny znak "?" (otaznik); inak retazec "nie". Zdrojovy
+text takehoto programu je napr.:
+
+      main() {
+        if (getchar() == '?')
+            printf(" ano \n");
+        else
+            printf(" nie \n");
+      }
+
+     Kazdy zdrojovy  program  C-jazyka  musi  mat  funkciu
+_m_a_i_n(),  ktora  napr. vyvola vlastnorucne napisane funkcie
+alebo kniznicne funkcie. Vykonanie programu zacina  prvym
+prikazom   vo   funkcii   _m_a_i_n().    Funkcia   _g_e_t_c_h_a_r(_3)   je
+kniznicna funkcia,  ktora  cita  znak  zo  standardneho
+
+
+16                                                           16
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+vstupu.  Nacitany  znak  sa  stane  jej hodnotou. Prikaz _i_f
+porovna hodnotu funkcie _g_e_t_c_h_a_r(_3) s binarnou hodnotou  znaku
+"?".  Ak  podmienka  plati,  potom  sa  kniznicnou  funkciou
+_p_r_i_n_t_f(_3) vypise na standardny vystup retazec "ano"; inak
+retazec "nie".  Sekvencia "\n" specifikuje znak novy riadok.
+Funkcie a prikazy sa  (okrem  _m_a_i_n())  v  C-jazyku  ukoncuju
+znakom  ";" (bodkociarka). Postupnost prikazov a funkcii sa
+musi nachadzat v zatvorkach { ... }.
+
+     Zdrojovy    text    programu    "zisti.c"     naeditujeme
+nasledujucim sposobom:
+
+ed              (vyvola sa textovy editor)
+a               (pridaj do buffra editora text)
+ZDROJOVY TEXT  (napiseme horeuvedenych 6 riadkov)
+.               (koniec vstupneho textu)
+1,$p            (vypisanie obsahu buffra)
+w zisti.c       (obsah buffra sa zapise do suboru "zisti.c")
+q               (navrat do shellu)
+
+Ine editovacie prikazy su:
+
+.         - vypis pracovny riadok buffra.
+
+cislo     - chod na riadok ?c?i_s_l_o.  Napriklad,  ak  chceme
+            pracovat  s  piatym  riadkom buffra (buffer nesmie
+            byt prazdny), napiseme:
+
+                  5
+
+            a piaty riadok sa zaroven i vypise. Tento  ria-
+            dok sa stane aktualnym pracovnym riadkom.
+
+$         - chod na posledny riadok buffra.
+
+/retazec/ - hladaj _r_e?t_a_z_e_c v buffri. Po  najdeni  retazca
+            sa  riadok,  v  ktorom sa tento retazec nachadza,
+            stane aktualnym pracovnym riadkom a zaroven  sa
+            vypise.
+
+1,20p     - vypis prvych 20 riadkov buffra. 20-ty riadok  sa
+            stane aktualnym pracovnym riadkom.
+
+p         - vypis aktualny pracovny riadok.
+
+s/retazec1/retazec2/
+     - zamen _r_e?t_a_z_e_c_1 za  _r_e?t_a_z_e_c_2  v  aktualnom  pracovnom
+     riadku. Napr. ak v prvom riadku napiseme:
+
+           maan(){
+
+     potom slovo "maan" opravime na "main" takto:
+
+           1
+
+
+17                                                           17
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+     prvy riadok sa stane aktualnym pracovnym riadkom:
+
+           s/aa/ai/p
+
+     zmeneny riadok sa zaroven i vypise.
+
+ 1,3d - vymaz  prve  3  riadky  buffra  (dalsi  riadok  je
+        aktualny).
+
+ d    - vymaz aktualny pracovny riadok.
+
+ dp   -   vymaz   aktualny   pracovny   riadok   a   vypis
+        nasledujuci.
+
+     Ak chceme opravovat subor "zisti.c", ktory sa nachadza
+na  disku v pracovnom katalogu horeuvedenymi prikazmi, potom
+musime tento subor skopirovat do buffra editora prikazom:
+
+      ed zisti.c
+
+Po editovani prelozime zdrojovy subor "zisti.c"  prikazom
+_c_c (C-kompilator) nasledovne:
+
+      cc zisti.c
+
+Ak sa preklad podaril (neboli ziadne syntakticke chyby),  po-
+tom  sa vykonatelny modul nachadza v subore "a.out". Subor
+"a.out" mozeme prikazom _m_v premenovat na subor "zisti":
+
+      mv a.out zisti
+
+Takto sa subor "zisti" stal vasim prvym vykonatelnym  pro-
+gramom, ktory mozete lahko spustit napisanim:
+
+      zisti
+
+     C-jazyk je  vseobecny  programovaci  jazyk,  ktory  je
+jazykom  vysokej  urovne,  obsahujucim  prvky jazykov nizkej
+urovne. Podobne ako v Pascale,  i  v  C-jazyku  su  dostupne
+strukturovane  prikazy.   V  ukazke  programu "zisti.c" je
+pouzity  prikaz  _i_f.   Vsimnite  si,  ze  kvoli   lepsej
+citatelnosti  zdrojovych  programov  su  prikazy odsunute
+tabelatormi. Pri  editovani  sa  nemusime  starat  o  posun
+spomenutych prikazov tabelatormi, pretoze program _c_b urobi
+tuto cinnost za nas, napr.:
+
+   a) naeditujeme  zdrojovy  subor  "zisti.c"  bez  odsunutia
+      prikazov.
+
+   b) pouzijeme prikaz _c_b, ktory precita subor "zisti.c",
+      upravi ho a vystup zapise do suboru "struktzisti.c":
+
+            cb <zisti.c >struktzisti.c
+
+
+18                                                           18
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+      Znak "<" sposobi, ze _c_b bude citat vstup zo suboru
+      "zisti.c", namiesto z terminalu.
+
+     Prikazom _c_b  mozete  vytvorit  strukturovany  subor
+"zisti.c" bez pouzitia editora takto:
+
+      cb >zisti.c
+      ZDROJOVY TEXT
+      ^d
+
+Zdrojovy subor pre C-kompilator _c_c musi mat priponu ".c".
+
+
+
+14.  Prikazovy subor pre shell
+
+
+     Doteraz  sme   _s_h_e_l_l   pouzivali   na   sprostredkovanie
+komunikacie  medzi  uzivatelom  a pocitacom. Okrem tejto
+funkcie sa _s_h_e_l_l pouziva i ako interpretator programovacieho
+jazyka.    _S_h_e_l_l   je  programovaci  jazyk,  ktory  dovoluje
+vykonavat:
+
+    - prikazy cyklu (for, while, until).
+
+    - podmienkove prikazy (if, case).
+
+    - substitucie prikazov, premennych, atd.
+
+     Nie je ucelom tejto prirucky rozoberat moznosti pro-
+gramovania  v  _s_h_e_l_l_e.   Preto  bude  v  dalsom  uvedeny len
+jednoduchy prikazovy subor, ktory vyvola editor, v ktorom
+vytvorite  zdrojovy program v C-jazyku.  Vytvoreny zdrojovy
+text sa automaticky prelozi.  Ak prebehol preklad bez  chyb,
+potom  sa  cielovy modul "a.out" premenuje na meno vstupneho
+suboru  bez  pripony  ".c".  Zdrojovy   text   naznaceneho
+prikazoveho  suboru i s komentarom prikazov, ktore su na
+zaciatku riadku, je:
+
+:                            Za znak dvojbodka sa pisu komentare.
+                             (v niekt. systemoch je to znak "#").
+
+echo:                        Napis meno zdrojoveho suboru!
+read a ;:                    Prikaz read caka na napisanie mena
+                             zdrojoveho suboru.
+ed $a ;:                     Teraz napisete zdrojovy program
+                             v C-jazyku.
+cc $a ;:                     Po editovani cc automaticky prelozi
+                             zdrojovy program.
+test -s a.out || exit ;:     Ak sa nevytvoril modul "a.out",
+                             koniec.
+mv a.out `basename $a .c` ;: Modul " a.out" sa premenuje.
+
+
+
+19                                                           19
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+     Prikaz _e_c_h_o je standardny prikaz OS DEMOS, ktory vyp-
+isuje  svoje argumenty na standardny vystup. V prikazovych
+suboroch sa pouziva na vypis informacnych sprav.
+
+     Prikaz   _r_e_a_d   je   specialny   prikaz   shellu.    V
+prikazovych  suboroch sa pouziva na citanie retazcov zo
+standardneho vstupu. V nasom pripade ulozi  do  premennej
+"a" meno zdrojoveho suboru.
+
+     $_a oznacuje hodnotu premennej "a". Tato hodnota, t.j.  v
+nasom  pripade meno zdrojoveho suboru sa poskytne ako argu-
+ment pre prikaz _e_d a potom _c_c.
+
+     Prikaz _t_e_s_t je standardny prikaz OS  DEMOS.  V  horeu-
+vedenom suborovom systeme sa pouziva na zistenie existencie
+suboru "a.out".
+
+     Prikaz _e_x_i_t je specialny prikaz shellu. V horeuvedenom
+prikazovom  subore  sa  pouziva  na ukoncenie vykonavania
+prikazoveho suboru, ak subor "a.out" neexistuje.
+
+     Prikaz _b_a_s_e_n_a_m_e  je  standardny  prikaz  OS  DEMOS.  V
+horeuvedenom  prikazovom  subore sa pouziva na odstranenie
+pripony ".c" z mena zdrojoveho suboru.
+
+     Par opacnych apostrofov `...` signalizuje  shellu  tzv.
+substituciu prikazu, t.j. prikaz:
+
+      `basename $a .c`
+
+sa vykona s tym, ze sa spracovane meno zdrojoveho  suboru
+neposle na standardny vystup, ale sa stane druhym argumen-
+tom prikazu _m_v, ktory premenuje subor "a.out" na toto meno.
+
+     Zdrojovy  text   horeuvedeneho   prikazoveho   suboru
+vytvorime  programom  _e_d  a  ulozime  do  suboru  "preloz".
+Prikazovy subor "preloz" vykoname prikazom _s_h takto:
+
+      sh preloz
+
+     Prikazovy subor "preloz" mozeme vykonat i  tak,  ze
+shell  bude  vypisovat  meno kazdeho prikazu, ktory prave
+vykonava.   Toto  je  uzitocne  pri  ladeni  prikazovych
+suborov:
+
+      sh -x preloz
+
+     Ak teraz chceme vediet ako je prikazovy subor "preloz"
+zapisany v katalogu, prikazom:
+
+      ls -l preloz
+
+zistime, ze nema nastaveny rezim vykonatelnosti, t.j.   _x
+pre vlastnika. To sa lahko dosiahne prikazom:
+
+
+20                                                           20
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      chmod +x preloz
+
+ktory nastavi tento rezim. Prikazovy subor s  nastavenym
+rezimom  vykonavania sa uz nemusi spustat prikazom _s_h,
+ale sa len zada:
+
+      preloz
+
+a interaktivny shell tento prikazovy subor vykona.
+
+     Pri ladeni prikazovych suborov, programov napisanych
+v  C-jazyku  je  vhodne  mat  vypis  zdrojovych  suborov s
+ocislovanymi  riadkami  kvoli  neskorsiemu   modifikovaniu
+suborov  editorom.  Napriklad  ak zistite, ze mate chybu v
+riadku 300, po vstupe  do  editora  napisete  cislo  300  a
+mozete  opravit riadok 300. Vypis suboru s ocislovanymi
+riadkami sa vytvara prikazom:
+
+      nl subor | pr >/dev/lp0
+
+ktoreho vystup pojde na tlaciaren. Prikaz  _n_l  ocisluje
+vsetky riadky suboru, v ktorych je uvedeny nejaky text.
+
+Poznamka:
+Rezim  vykonatelnosti  (znamena,  ze  po  napisani   mena
+prikazu  v  interaktivnom  rezime  shellu  sa  tento prikaz
+moze vykonat) sa v prikazovych suboroch nastavuje  jedine
+prikazom _c_h_m_o_d.
+
+
+
+15.  Vyhodnocovanie argumentov prikazov
+
+
+     Standardny prikaz OS  DEMOS  _e_x_p_r(_1)  sa  pouziva  na
+jednoduche interaktivne vypocty, napr.:
+
+      expr 321 \* 216
+
+kde prikaz _e_x_p_r zapise  na  standardny  vystup  vysledok
+sucinu  "321x216". Pred operatorom nasobenia (hviezdicka),
+musi byt  znak  "\",  ktory  potlaci  specialny  vyznam
+hviezdicky pre _s_h_e_l_l.  Ak chcete vediet ako _s_h_e_l_l vyhodnocuje
+horeuvedeny vyraz bez "\", napiste:
+
+      echo 321 * 216
+
+pretoze prikaz:
+
+      expr 321 * 216
+
+by vypisal iba chybovu spravu. Podobne je to i  s  delenim,
+kde prikaz:
+
+
+
+21                                                           21
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      expr 1000 \/ 21
+
+zapise  vysledok  delenia  na  standardny  vystup.   Pred
+operatorom delenia "/" musi byt znak "\".
+
+     Vseobecne argumenty  lubovolneho  prikazu  OS  DEMOS,
+musia  byt  od  prikazu  a  navzajom  medzi  sebou oddelene
+medzerami (tabelatormi). Pretoze argumenty prikazov vyhodno-
+cuje  shell  a potom ich odovzdava prikazom, pred niektorymi
+specialnymi znakmi musi byt znak "\", ktory potlaci  ich
+specialny vyznam pre _s_h_e_l_l.
+
+Specialne znaky pre _s_h_e_l_l su:
+
+ \     - potlac specialny vyznam specialneho znaku.
+
+ '...'  - potlac specialny vyznam sekvencie specialnych znakov
+          okrem "'".
+
+ "..."  - potlac specialny vyznam sekvencie znakov okrem
+          "$", "`", "\" a uvodzoviek.
+
+${...}  - substitucia premennej shellu.
+
+`...`   - substitucia vystupu z prikazu.
+
+[...]   - ktorykolvek znak, ktory  sa  nachadza  v  tychto
+         zatvorkach.
+
+?       - ktorykolvek jeden znak.
+
+*       - akykolvek  retazec,  vratane  prazdneho,  ktory
+         nezacina znakom ".".
+
+>       - presmerovanie vystupu do suboru.
+
+>>      -  pripojenie  vystupu  (na  koniec  specifikovaneho
+         suboru).
+
+<       - presmerovanie vstupu do suboru.
+
+<<      - vstup pripravenych dat pre program.
+
+()     - zoskupovanie prikazov.
+
+&       - prikazy na pozadi.
+
+;;      - ukoncovatel riadiaceho prikazu shellu _c_a_s_e.
+
+;       - oddelovac prikazov.
+
+||      - symbol alternativy.
+
+&&      - symbol konjunkcie.
+
+
+22                                                           22
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+|       - symbol programoveho kanalu.
+
+:       - komentar.
+
+Rezervovane slova _s_h_e_l_l_u su:
+
+      if then else elif fi
+      case in esac
+      for while until do done
+      { }
+
+     Ak pouzijeme  niektory  z  horeuvedenych  specialnych
+znakov  alebo  rezervovanych  slov ako argument lubovolneho
+prikazu, musime si najskor uvedomit jeho funkciu. Napr.:
+
+      ls ?
+
+vypise na standardny vystup  zoznam  suborov  pracovneho
+katalogu, ktore maju jednoznakove meno. A prikaz:
+
+      ls \?
+
+zisti, ci v pracovnom  katalogu  existuje  subor,  ktoreho
+meno je jeden otaznik.
+
+
+
+16.  Hladanie suborov a retazcov
+
+
+     Zakladny rozdiel medzi hladanim suborov  a  retazcov
+je  taky,  ze  subory  sa  hladaju  v  katalogoch logicky
+pripojenych suborovych systemov, pripadne  v  knizniciach
+(pracu  s  kniznicou umoznuje prikaz _a_r(_1)), kym retazce
+sa hladaju v textovych suboroch. Napriklad prikaz:
+
+      ls /bin/ar
+
+zisti, ci sa v katalogu "/bin"  nachadza  prikaz  (subor)
+_a_r.   Prikaz  _a_r  nie  je  textovy subor, co sa da zistit
+prikazom _f_i_l_e (prikaz _f_i_l_e urcuje druh suboru):
+
+      file /bin/ar
+
+a preto v nom nemozeme hladat textove retazce.
+
+     Pri uvedenom "hladani" sme vychadzali z  poznatku,  ze
+_a_r  je  prikaz,  a  preto  sa nachadza v katalogu "/bin". Na
+hladanie suborov,  o  ktorych  vopred  nevieme,  v  ktorych
+katalogoch  sa  nachadzaju,  sa  pouziva  prikaz _f_i_n_d(_1).
+Napriklad prikaz:
+
+      find / -name ar -print
+
+
+23                                                           23
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+bude hladat subor _a_r od katalogu "root"  (specifikoval  sa
+znakom "/") a ked ho najde, vytlaci jeho uplne meno (t.j.
+aj s  katalogom,  v  ktorom  sa  nachadza).   Prikazom  _f_i_n_d
+mozeme realizovat napr. nasledujucu vetu: "Najdi subor _a_r
+a analyzou jeho obsahu zisti, o aky typ suboru ide."
+
+      find / -name ar -exec file {} \;
+
+     Textove retazce  sa  hladaju  v  textovych  suboroch
+prikazom _f_g_r_e_p(_1).  Napriklad, ak chceme vediet, ktory ria-
+dok suboru "preloz" (vid. kapitolu  "Prikazovy  subor  pre
+shell") obsahuje retazec "meno", napiseme prikaz:
+
+      fgrep -n meno preloz
+
+alebo ak chceme poznat mena suborov v  pracovnom  katalogu,
+ktore obsahuju retazec "meno", napiseme:
+
+      fgrep meno *
+
+     Ak  pracujeme  v  katalogu,  v  ktorom   sa   nenachadza
+prikazovy  subor  "preloz"  a  chceme  vediet, ci obsahuje
+retazec "meno", napiseme:
+
+      find / -name preloz -exec fgrep meno {} \;
+
+Vsimli ste si, ze v specifikacii prikazu  _f_i_n_d  sa  za  "-
+name"  nachadza  meno  suboru, ktory chceme hladat a za "-
+exec" sa nachadza lubovolny standardny prikaz, ktory  s
+najdenym    suborom   dokaze   previest   specifikovanu
+operaciu.
+
+
+
+17.  Praca s paskou
+
+
+     Na pracu s magnetickou paskou sa v OS DEMOS pouzivaju
+prikazy _t_a_r(_1), _d_u_m_p(_8), _d_u_m_p_d_i_r(_8), _r_e_s_t_o_r(_8), _d_d(_1), _a_n_s_i(_1)
+atd.
+
+     Prikaz  _t_a_r  sa  pouziva   na   postupne   zapisovanie
+jednotlivych  suborov (katalogov) na pasku, az kym nie je
+plna. Ak chceme zapisovat na prazdnu pasku (alebo premazat
+pasku)  obsah  pracovneho  katalogu, pasku musime najskor
+inicializovat a az potom  na  nu  pridavat  subory.   Obe
+tieto cinnosti sa specifikuju klucom "c", napr.:
+
+      tar c0 *
+
+kde "0" specifikuje cislo pasky a znak "*" vsetky  subory
+v  katalogu.   Ci  sa  na pasku subory skutocne zapisali,
+zistime prikazom:
+
+
+24                                                           24
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      tar t0
+
+kde argument "t" specifikuje vypis zoznamu mien  suborov  na
+paske.   Vypis zoznamu suborov moze smerovat na terminal
+a sucasne do specifikovaneho suboru pouzitim prikazu:
+
+      tar t0 | tee a
+
+     Prikaz  _t_e_e  je   prikaz   OS   DEMOS,   ktory   cita
+standardny  vstup  (v tomto pripade je to vystup z prikazu
+_t_a_r)  a  tento   zapisuje   na   terminal   a   sucasne   do
+specifikovaneho  suboru  "a".  Ak by ste chceli za nahranym
+obsahom pracovneho katalogu programom  _t_a_r  pridat  dalsie
+subory,  musite  zadat  kluc  "r".   Ak  chcete  z pasky
+nahranej programom _t_a_r precitat konkretny  subor,  musite
+zadat kluc "x".
+
+     Program _d_u_m_p sa pouziva na zapisovanie tych suborov na
+pasku,  ktore  boli modifikovane od urciteho casu. Zoznam
+suborov, ktore sa nachadzaju  na  paske  vytvorenej   pro-
+gramom  _d_u_m_p  sa  cita programom _d_u_m_p_d_i_r.  Konkretne subory
+alebo cela paska nahrana programom _d_u_m_p sa cita  programom
+_r_e_s_t_o_r.   Programom  _r_e_s_t_o_r  nie  je  mozne  citat  pasku
+nahranu programom _t_a_r a opacne, programom _t_a_r nie je  mozne
+citat pasku nahranu programom _d_u_m_p.
+
+     Casto vznika potreba preniest data medzi  OS  DEMOS  a
+inym  OS pouzitim magnetickej pasky. Hlavnym problemom je
+konvertovanie  medzi  cudzim  formatom  suboru  a  formatom
+suboru  OS  DEMOS.  Na tieto ucely sa pouziva program _d_d a
+_a_n_s_i.  Programom _d_d je vsak mozne i kopirovat  z  jedneho
+suboroveho   systemu  do  druheho,  suborovy  system  na
+pasku, pasku na pasku. Pri kopirovani nezalezi na  tom,
+ci  bola  paska nahrana programom _t_a_r, _d_u_m_p alebo programami
+inych OS. Program _a_n_s_i  je  urceny  na  prenos  suborov  vo
+formate ANSI.
+
+Poznamka:
+Prikazy uvedene v  tejto  kapitole  sa  pouzivaju  aj  pri
+zalohovani suborov na disketu.
+
+
+
+18.  Ochrana suborov
+
+
+     Kazdy subor OS DEMOS je spojeny s 11 ochrannymi  bit-
+mi,  spolu  s  identifikacnym  cislom  uzivatela (UID) a
+identifikacnym cislom skupiny (GID).   Devat  ochrannych
+bitov  sa  pouziva  na  nastavenie  povolenia  citania (r),
+zapisu (w) a vykonavania  (x)  suboru  vlastnikom,  clenmi
+jeho  pracovnej  skupiny  a ostatnymi uzivatelmi. Ako maju
+subory nastavenu ochranu informacii zistime prikazom:
+
+
+
+25                                                           25
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      ls -l
+
+Ochranne bity sa nastavuju prikazom _c_h_m_o_d.   Napriklad,  ak
+chceme nastavit suboru "preloz" rezim citania, zapisovania
+a vykonavania  pre  vsetkych  (t.j.  vlastnika,  skupinu  a
+ostatnych), napiseme prikaz:
+
+      chmod 777 preloz
+
+kde prva sedmicka nastavuje bity _r_w_x pre  vlastnika,  druha
+sedmicka pre skupinu a tretia pre ostatnych.  Cisla, ktore
+specifikuju nastavenie rezimu, su v  osmickovej  sustave.
+Ak chceme suboru "preloz" nastavit rezim citania a zapisu
+len pre vlastnika, napiseme prikaz:
+
+      chmod 600 preloz
+
+Teraz by sa ostatni  uzivatelia  darmo  pokusali  citat
+alebo zapisovat do suboru "preloz".
+
+     Nastavovat ochranne  bity  prikazom  _c_h_m_o_d  moze  iba
+vlastnik suboru alebo privilegovany uzivatel.
+
+     Privilegovany uzivatel a  ak  to  ma  umoznene,  aj
+vlastnik suboru moze zmenit vlastnictvo suboru prikazom
+_c_h_o_w_n(_8).  Napr. ak subor "preloz" vlastnil uzivatel _j_u_r_o a
+tento  chce,  aby  subor  "preloz" vlastnil uzivatel _v_l_a_d_o,
+napise prikaz:
+
+      chown vlado preloz
+
+     Po tomto prikaze moze uzivatel _v_l_a_d_o  zmenit  obsah
+suboru  "preloz".  Meno  noveho vlastnika suboru musi byt
+bud platne meno, pod ktorym sa da prihlasit do  systemu,
+alebo identifikacne cislo uzivatela. Prihlasovacie mena
+a  zodpovedajuce  identifikacne  cisla   su   v   subore
+"/etc/passwd" (_p_a_s_s_w_d(_5)).  Prikazom
+
+      chgrp nasi preloz
+
+ziska skupina "nasi" pristupove prava k  suboru  "preloz".
+Mena  skupin  alebo  identifikacne  cisla  skupin  (GID)
+specifikovane v prikaze  _c_h_g_r_p(_8)  sa  musia  nachadzat  v
+subore "/etc/group" (_g_r_o_u_p(_5)).
+
+     OS DEMOS umoznuje ochranu uzivatelskych suborov  aj
+tym,  ze  pri  vstupe  do systemu moze system pozadovat
+okrem mena uzivatela i jeho heslo. Heslo si nastavuje  alebo
+meni kazdy uzivatel sam prikazom _p_a_s_s_w_d(_1).
+
+     Dalsou formou ochrany suboru je moznost  zasifrovat
+subor prikazom _c_r_y_p_t(_8).
+
+
+
+
+26                                                           26
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+19.  Formatovanie textov
+
+
+     Na  formatovanie  textov  pre  terminaly  a  (riadkove)
+tlaciarne   sa   pouziva   program   _n_r_o_f_f(_1).    Zakladnou
+myslienkou programu  _n_r_o_f_f  je,  ze  text,  ktory  ma  byt
+formatovany,  obsahuje  v sebe formatovacie prikazy, ktore
+detailne  indikuju,  ako  ma  formatovany  text   vyzerat.
+Napriklad,  v texte mozu byt prikazy, ktore specifikuju
+dlzku  riadkov,  podciarkuju  slova,  cisluju   strany.
+Prikaz  _n_r_o_f_f  akceptuje  asi  80 formatovacich prikazov, z
+ktorych kazdy ma specificku funkciu.
+
+     _N_r_o_f_f  dovoluje  skladat  z   mnoziny   formatovacich
+prikazov   sekvencie   zakladnych   operacii,   ktore  sa
+stavaju  novou  formatovacou  operaciou  nazyvanou  _m_a_k_r_o.
+Kazde makro ma svoje meno. Vy si mozete vytvorit vlastne
+makra tak, ze ich definujete na  zaciatku  neformatovaneho
+textu,  a potom ich podla potreby vyvolavate. Pretoze nie je
+jednoduche zostavovat makra zo zakladnych  formatovacich
+prikazov,  su  k  dispozicii  hotove subory makier, ktore
+nam zjednodusia pracu s _n_r_o_f_f_o_m.   Napr.   subor  "tmac.ut"
+standardne  ulozeny  v  katalogu "/usr/lib/tmac" bude _n_r_o_f_f
+pouzivat, pokial sa zada argument  "-mut".   Formatovacie
+poziadavky realizovane v tomto subore makier sa vyvolavaju
+spracovanim neformatovaneho textu, napr. takto:
+
+      .NA /"Nadpis
+      text nadpisu
+      .OD /"Odstavec
+      text1
+      .OD
+      text2
+      .CN 1 /"~Cislovany nadpis
+      nadpis
+      .ZU /"Zaciatok ukazky
+      priklad
+      .KU /"Koniec ukazky
+      .OD
+      text3
+
+Riadky, ktore zacinaju bodkou su formatovacie poziadavky
+(prikazy alebo makra).
+
+     Formatovanie textu, v ktorom boli pouzite  standardne
+makra sa vykonava takto:
+
+      nroff -mut neformatsubor
+
+     Vysledok  formatovania  suboru   "neformatsubor"   bude
+smerovat  na  terminal.   Ak ho chceme  ulozit do nejakeho
+suboru, musime napisat prikaz:
+
+      nroff -mut neformatsubor >formatsubor
+
+
+27                                                           27
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+     Formatovanie textov prikazom _n_r_o_f_f trva urcity  cas.
+Kolko  sekund  trva  lubovolny prikaz zistime prikazom
+_t_i_m_e, napr.:
+
+      time nroff -mut neformatsubor
+
+Vsimnite si, ze prikaz _n_r_o_f_f je argumentom prikazu _t_i_m_e(_1).
+Prikazy,   ktore   trvaju   dlhsi   cas,   je  najlepsie
+vykonavat na  pozadi  so  znizenou  prioritou  (pouzitim
+prikazu  _n_i_c_e)  a odolne voci signalom (pouzitim prikazu
+_n_o_h_u_p), napr.:
+
+      nice nohup nroff -mut neformatsubor &
+
+
+
+20.  Nastavenie charakteristik terminalu
+
+
+     Na zistenie mena  specialneho  terminaloveho  suboru,
+ktory  je  pripojeny  k  standardnemu  vstupu  sa pouziva
+prikaz _t_t_y.
+
+     Na nastavovanie charakteristik  terminalu  sa  pouziva
+prikaz _s_t_t_y(_1).  Tento prikaz je velmi dolezity, pretoze
+existuje  vela  rozdielnych  typov   terminalov.   Napr.   ak
+napiseme prikaz _s_t_t_y bez argumentov:
+
+      stty
+
+tento vypise aktualne nastavene charakteristiky terminalu.
+
+     Kazdy   uzivatel   si   moze    zahrnut    vhodne
+specifikovany  prikaz  _s_t_t_y do suboru ".profile", ktory sa
+vykona bezprostredne po prihlaseni do systemu.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+28                                                           28
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+
+
+21.  Priloha - vykladovy slovnik
+
+
+
+katalog "/bin" - /bin directory
+
+
+    - podkatalog hlavneho katalogu, v ktorom sa nachadzaju
+      uzivatelske prikazy OS.
+
+
+katalog "/dev" - /dev directory
+
+    - podkatalog hlavneho katalogu, ktory obsahuje  vsetky
+      specialne subory.
+
+
+katalog "/etc" - /etc directory
+
+    - podkatalog hlavneho katalogu, v ktorom sa nachadzaju
+      prikazy pre spravu systemu a systemove subory.
+
+
+katalog "/tmp"; oblast docasnych suborov - /tmp directory
+
+    - jeden z  katalogov,  v  ktorych  sa  pocas  prace  OS
+      vytvaraju docasne subory.
+
+
+katalog "/usr" - /usr directory
+
+    - podkatalog hlavneho katalogu, ktory je  rozsirenim
+      OS.  Obsahuje  podkatalogy:  "lib",  "bin",  "tmp", "in-
+      clude".  Obvykle sa tu  nachadzaju  aj  uzivatelske
+      katalogy.
+
+
+neblokovy V/V - RAW I/O
+
+    - vstup/vystup, pri ktorom sa data  predavaju  bezpros-
+      tredne   medzi   perifernym   zariadenim  a  operacnou
+      pamatou, t.j. bez pouzitia systemoveho buffrovacieho
+      mechanizmu.
+
+
+proces na pozadi - background process
+
+    - proces, pri vykonavani ktoreho shell necaka na  jeho
+      ukoncenie  a  moze  prijimat  dalsi  vstup.  Jeho
+      standardny vstup je zatvoreny a  standardny  vystup
+      otvoreny.
+
+
+29                                                           29
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+
+
+specialny subor blokovo orientovany -  block  type  special
+file
+
+    -   subor,   ktory   predstavuje    periferne    blokovo
+      orientovane zariadenie.  Zariadenie tohto typu vyuziva
+      systemovy buffrovaci mechanizmus (napr.  "mt0" - magn.
+      paska, "rk0" - disk, ...).
+
+
+zasobnikovy, dynamicky segment - bss segment
+
+    - cast programu, obsahujuca neinicializovane vonkajsie
+      a  staticke  premenne, ktorym je pamat pridelena na
+      zaciatku behu programu (nie pri preklade).
+
+
+specialny subor znakovo orientovany - character type special file
+
+    - subor, ktory predstavuje periferne zariadenie  znakovo
+      orientovane   (napr.   "tty"   -   terminal,   "lp0"  -
+      tlaciaren   ...),   popripade    zariadenie,    ktore
+      nevyuzivaju    systemovy   buffrovaci   mechanizmus
+      ("rrk1" - magn.  disky,...).
+
+
+riadiaci terminal procesu - control terminal
+
+    - terminal, ktoreho specialny subor je otvoreny  pro-
+      cesom  ako  prvy.   Terminal,  z  ktoreho  bol  proces
+      spusteny.
+
+
+pracovny katalog - current or working directory
+
+    - katalog, v ktorom sa  uzivatel  systemu  momentalne
+      nachadza.
+
+
+cylinder - cylinder
+
+    -  myslena  valcova  plocha  diskoveho  media,   ktorej
+      mnozina   blokov   je  pri  rotovani  media  citana
+      vsetkymi hlavickami bez zmeny ich polohy.
+
+
+datovy segment - data segment
+
+    - cast programu, obsahujuca inicializovane vonkajsie a
+      staticke  premenne,  ktorym  je pamat pridelena pri
+      preklade.
+
+
+
+30                                                           30
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+katalog - directory
+
+    - typ suboru obsahujuci odkazy na subory.
+
+
+efektivne UID, GID - effective UID, effective GID
+efektivny identifikator
+
+    - efektivny identifikator uzivatela alebo skupiny  pre
+      aktivny proces.  Urcuje pristupove prava procesu.
+
+
+popisovac suboru - file descriptor
+
+    -  cele  cislo  ("n>=0"),  ktore  jednoznacne  urcuje
+      subor otvoreny systemovym volanim open alebo create.
+
+
+kod ochrany suboru - file mode
+
+    - cele cislo (typu short), ktoreho  bity  urcuju  typ
+      suboru  a  pristupove  prava  uzivatela k nemu. Vo
+      viacuzivatelskych   systemoch   zaistuje   urcity
+      stupen ochrany uzivatelskych programov.
+
+
+suborovy system - file system
+
+    - mnozina suborov  a  riadiacich  struktur  (inode)  na
+      pamatovom mediu.
+
+
+filter - filter
+
+    - program, ktory cita data  zo  standardneho  vstupu,
+      spracuje   ich   a  zapisuje  vysledky  na  standardny
+      vystup.
+
+
+GID, identifikator skupiny - group ID, GID
+
+    - cele cislo, ktore urcuje skupinu vlastnika  suboru
+      alebo procesu.
+
+
+domaci katalog - home directory
+
+    - katalog definovany premennou prostredia HOME.
+
+
+ilist, zoznam inode - i-list
+
+    - postupnost blokov  na  disku  (zacinajuca  za  super-
+      blokom) obsahujuca zoznam inode.
+
+
+31                                                           31
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+
+inode - i-node
+
+    - struktura dat, ktora popisuje typ  suboru,  fyzicke
+      ulozenie  suboru  na  disku,  vlastnika a pristupove
+      prava.
+
+
+cislo inode, inumber - i-number
+
+    - cislo, ktore urcuje poradie inode v  strukture  il-
+      ist.  Inode sa cisluje od 1 vyssie.
+
+
+obraz procesu - image
+
+    - prostredie, v ktorom sa vykonava proces. Zahrna v sebe
+      stav  pamati pridelenej procesu, hodnoty registrov, stav
+      otvorenych suborov, pracovny katalog, atd.
+
+
+prihlasovaci katalog - login directory
+
+    - katalog, ktory je definovany v  subore  "/etc/passwd"
+      pre  daneho  uzivatela  a  do ktoreho sa uzivatel
+      dostane hned po prihlaseni sa do systemu.
+
+
+magicke cislo, systemovy kod suboru - magic number
+
+    - oznacenie prveho slova suboru,  ktore  charakterizuje
+      niektore  typy  suborov  (napr.  vykonatelny  subor,
+      archiv, ...).
+
+
+typ zariadenia - major number
+
+    - cislo, udavajuce typ zariadenia
+
+
+cislo zariadenia - minor number
+
+    - cislo zariadenia
+
+
+logicke pripojenie - mount
+
+    - logicke pripojenie suboroveho systemu.
+
+
+uplne meno suboru - pathname
+
+    - postupnost mien katalogov, cez ktore prechadza  cesta
+
+
+32                                                           32
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+      od  hlavneho  katalogu "root" ku konkretnemu suboru v
+      stromovej strukture systemu. Zacina  znakom   "/"  a
+      konci  menom  suboru  v  poslednom  katalogu, pricom
+      mena katalogov su oddelene znakom "/".
+
+
+
+
+programovy kanal - pipe
+
+    - spojenie medzi standardnym vystupom jedneho  programu
+      a standardnym vstupom druheho programu.
+
+
+kolona - pipeline
+
+    - skupina programov spojenych programovymi kanalmi.
+
+
+proces - process
+
+    - program alebo cast programu, ktory sa prave vykonava
+      a  ktoremu  je  pridelena  jedna polozka v systemovej
+      tabulke procesov.
+
+
+PID, identifikator procesu - process ID, PID
+
+    - cele cislo, ktore identifikuje proces v systeme.  Je
+      v danom case jedinecne.
+
+
+kvota - quota
+
+    - ohranicenie mnozstva pamati na diskovom mediu, ktore
+      moze byt obsadene subormi jedneho uzivatela.
+
+
+hlavny katalog, root - root
+
+    - hlavny katalog v suborovom systeme; koren v  stromo-
+      vej strukture suboroveho systemu.
+
+
+jednouzivatelsky rezim - single user mode
+
+    - rezim systemu, v ktorom je logicky pripojena len  kon-
+      zola   a   ktory   umoznuje   pracovat  iba  jednemu
+      uzivatelovi.
+
+
+standardny vstup - standard input
+
+    - subor, ktoreho popisovac suboru je cislo 0.
+
+
+33                                                           33
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+
+standardny vystup - standard output
+
+    - subor, ktoreho popisovac suboru je cislo 1.
+
+
+
+
+prud - stream
+
+    - subor spojeny s bufferizacnou strukturou FILE.
+
+
+podkatalog - subdirectory
+
+    - katalog, ktory je obsiahnuty v nejakom inom katalogu.
+
+
+privilegovany uzivatel - super user
+
+    - uzivatel, ktory ma  vsetky  pristupove  prava  v
+      systeme.
+
+
+superblok - superblock
+
+    -  blok  suboroveho  systemu,  v  ktorom  su  ulozene
+      zakladne  parametre  suboroveho  systemu  na  mediu
+      (velkost media, velkost ilistu a  pod.).   Obycajne
+      je umiestneny na prvom bloku suboroveho systemu.
+
+
+swapovanie - swap
+
+    - premiestnovanie  obrazu  procesu  z  operacnej  pamati
+      pocitaca na swapovacie zariadenie a naopak.
+
+
+systemove volanie - system call
+
+    - poziadavka aktivneho procesu na jadro OS.
+
+
+textovy segment - text segment
+
+    - cast programu, ktora obsahuje instrukcie v  strojovom
+      kode.
+
+
+trasovanie - tracing
+
+    - sledovanie priebehu vykonavania programu vo vopred spe-
+      cifikovanych bodoch (vid. trasovaci bod).
+
+
+34                                                           34
+FoRmFeEd
+
+
+
+
+                             DEMOS
+
+
+
+
+
+
+
+trasovacia informacia - tracing information
+
+    - informacia o priebehu vykonavania programu vypisana v
+      trasovacom bode.
+
+
+trasovaci bod - tracing point
+
+    -  bod,  v  ktorom  sa  vypise  informacia  o   priebehu
+      vykonavania programu.
+
+
+stopa - track
+
+    - myslena kruznica na diskovom  mediu,  ktorej  mnozina
+      blokov   je   pri   rotovani   media  citana  jednou
+      hlavickou bez zmeny polohy hlavicky.
+
+
+UID, identifikator uzivatela - user ID, UID
+
+    - cele cislo, ktore urcuje  vlastnika  suboru  alebo
+      procesu.
+
+
+kontext procesu - user structure
+
+    - OS udrziava pre kazdy proces jednu strukturu "user".
+      Su  v nej informacie o procese a uzivatelovi, ktory
+      proces spustil.  Dalsie udaje  su  aj  v  systemovej
+      tabulke procesov.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+35                                                           35
+FoRmFeEd
+.
